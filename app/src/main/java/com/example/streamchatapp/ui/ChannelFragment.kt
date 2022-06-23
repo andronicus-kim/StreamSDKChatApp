@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.example.streamchatapp.databinding.FragmentChannelBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,5 +23,10 @@ class ChannelFragment: BaseFragment<FragmentChannelBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val user = viewModel.getCurrentUser()
+        if (user == null){
+            findNavController().popBackStack()
+            return
+        }
     }
 }
