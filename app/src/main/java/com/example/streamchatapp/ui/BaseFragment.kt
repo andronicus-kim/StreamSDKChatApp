@@ -21,14 +21,16 @@ abstract class BaseFragment<out T: ViewBinding> : Fragment() {
 
     private var _binding: ViewBinding? = null
     @Suppress("UNCHECKED_CAST")
-    protected val binding: T = _binding as T
+    protected val binding: T 
+        get() = _binding as T
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return fragmentBindingInflater(inflater).root
+        _binding = fragmentBindingInflater(inflater)
+        return _binding!!.root
     }
 
     override fun onDestroyView() {

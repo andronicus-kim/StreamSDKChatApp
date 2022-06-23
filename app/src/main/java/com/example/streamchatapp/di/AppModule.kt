@@ -1,6 +1,7 @@
 package com.example.streamchatapp.di
 
 import android.content.Context
+import com.example.streamchatapp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +21,6 @@ object AppModule{
     @Singleton
     @Provides
     fun providesChatClient(@ApplicationContext context: Context): ChatClient {
-        return ChatClient.Builder(apiKey = "", appContext = context).build()
+        return ChatClient.Builder(apiKey = BuildConfig.API_KEY, appContext = context).build()
     }
 }
