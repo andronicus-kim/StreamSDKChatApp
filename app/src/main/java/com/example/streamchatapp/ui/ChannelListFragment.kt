@@ -3,11 +3,14 @@ package com.example.streamchatapp.ui
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.example.streamchatapp.databinding.FragmentChannelListBinding
+import com.example.streamchatapp.domain.CreateChannelEvent
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.ChannelListHeaderViewModel
@@ -15,6 +18,7 @@ import io.getstream.chat.android.ui.channel.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModel
 import io.getstream.chat.android.ui.channel.list.viewmodel.bindView
 import io.getstream.chat.android.ui.channel.list.viewmodel.factory.ChannelListViewModelFactory
+import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Andronicus Kim on 6/23/22
@@ -52,6 +56,19 @@ class ChannelListFragment : BaseFragment<FragmentChannelListBinding>() {
             // sign out user
             viewModel.signOut()
             findNavController().popBackStack()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.createChannelEvent.collect { event ->
+                when(event) {
+                    is CreateChannelEvent.ApiError-> {
+                        Toast.makeText(requireContext(),event.error, Toast.LENGTH_LONG).show()
+                    }
+                    CreateChannelEvent.Success -> {
+                        Toast.makeText(requireContext(),"Channel created successfully", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         }
     }
 }
