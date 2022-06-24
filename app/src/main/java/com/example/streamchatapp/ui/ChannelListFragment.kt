@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.example.streamchatapp.R
 import com.example.streamchatapp.databinding.FragmentChannelListBinding
 import com.example.streamchatapp.domain.CreateChannelEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +57,19 @@ class ChannelListFragment : BaseFragment<FragmentChannelListBinding>() {
             // sign out user
             viewModel.signOut()
             findNavController().popBackStack()
+        }
+
+        binding.channelListView.setChannelItemClickListener{ channel ->
+            findNavController().navigate(
+                R.id.action_channelFragment_to_chatListFragment,
+                Bundle().apply { putString("channelId", channel.cid) }
+            )
+        }
+
+        binding.channelListHeaderView.setOnActionButtonClickListener{
+            findNavController().navigate(
+                R.id.action_channelFragment_to_createChannelDialog
+            )
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
