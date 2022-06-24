@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.example.streamchatapp.R
 import com.example.streamchatapp.databinding.FragmentLoginBinding
@@ -52,12 +53,13 @@ class LoginFragment: BaseFragment<FragmentLoginBinding>() {
     }
 
     private fun subscribeToEvents(){
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.authEvent.collect { event ->
                 setUIState(false)
                 when(event) {
                     is AuthEvent.Success -> {
-
+                        // Navigate to Channels List
+                        findNavController().navigate(R.id.action_loginFragment_to_channelFragment)
                     }
                     is AuthEvent.ApiError -> {
                         Toast.makeText(requireContext(),event.error,Toast.LENGTH_LONG).show()

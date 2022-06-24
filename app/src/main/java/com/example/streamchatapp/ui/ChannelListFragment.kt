@@ -7,7 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.example.streamchatapp.databinding.FragmentChannelBinding
+import com.example.streamchatapp.databinding.FragmentChannelListBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.ChannelListHeaderViewModel
@@ -20,12 +20,12 @@ import io.getstream.chat.android.ui.channel.list.viewmodel.factory.ChannelListVi
  * Created by Andronicus Kim on 6/23/22
  */
 @AndroidEntryPoint
-class ChannelFragment : BaseFragment<FragmentChannelBinding>() {
+class ChannelListFragment : BaseFragment<FragmentChannelListBinding>() {
 
     private val viewModel: ChannelViewModel by activityViewModels()
 
     override val fragmentBindingInflater: (LayoutInflater) -> ViewBinding
-        get() = FragmentChannelBinding::inflate
+        get() = FragmentChannelListBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,5 +47,11 @@ class ChannelFragment : BaseFragment<FragmentChannelBinding>() {
         // Bind viewmodels to UI
         channelListHeaderViewModel.bindView(binding.channelListHeaderView, viewLifecycleOwner)
         channelListViewModel.bindView(binding.channelListView, viewLifecycleOwner)
+
+        binding.channelListHeaderView.setOnUserAvatarClickListener{
+            // sign out user
+            viewModel.signOut()
+            findNavController().popBackStack()
+        }
     }
 }
