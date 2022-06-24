@@ -3,7 +3,9 @@ package com.example.streamchatapp.ui
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewbinding.ViewBinding
 import com.example.streamchatapp.databinding.FragmentChatListBinding
@@ -38,5 +40,32 @@ class ChatListFragment: BaseFragment<FragmentChatListBinding>() {
         messageListHeaderViewModel.bindView(binding.messageListHeaderView,viewLifecycleOwner)
         messageListViewModel.bindView(binding.messageListView,viewLifecycleOwner)
         messageInputViewModel.bindView(binding.messageInputView,viewLifecycleOwner)
+
+        messageListViewModel.mode.observe(viewLifecycleOwner) { mode ->
+            when(mode) {
+                is MessageListViewModel.Mode.Thread->{
+                    messageListHeaderViewModel.setActiveThread(mode.parentMessage)
+                    messageInputViewModel.setActiveThread(mode.parentMessage)
+                }
+                is MessageListViewModel.Mode.Normal -> {
+                    messageListHeaderViewModel.resetThread()
+                    messageInputViewModel.resetThread()
+                }
+            }
+        }
+
+        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
+        messageListViewModel.state.observe(viewLifecycleOwner) {
+            if(it == MessageListViewModel.State.NavigateUp) {
+                findNavController().navigateUp()
+            }
+        }
+        val backPressHandler = {
+            messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
+        }
+        binding.messageListHeaderView.setBackButtonClickListener(backPressHandler)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            backPressHandler()
+        }
     }
 }
