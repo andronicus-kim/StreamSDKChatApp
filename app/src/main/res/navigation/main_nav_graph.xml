@@ -15,5 +15,17 @@
     <fragment
         android:id="@+id/channelFragment"
         android:name="com.example.streamchatapp.ui.ChannelListFragment"
-        android:label="ChannelFragment" />
+        android:label="ChannelFragment" >
+        <action
+            android:id="@+id/action_channelFragment_to_chatListFragment"
+            app:destination="@id/chatListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="com.example.streamchatapp.ui.ChatListFragment"
+        android:label="ChatListFragment" >
+        <argument
+            android:name="channelId"
+            app:argType="string" />
+    </fragment>
 </navigation>
